@@ -17,7 +17,7 @@ export default function ({ types: t }) {
 
       var name = path.node.property.name
       var callee = path.node.computed ? t.identifier(name) : t.stringLiteral(name)
-      path.replaceWith(t.callExpression(t.identifier('globalGetInterceptor'), [path.node.object, callee]));
+      path.replaceWith(t.callExpression(t.identifier('globalGetInterceptor'), [path.node.object, callee]))
     },
 
     AssignmentExpression (path) {
@@ -25,10 +25,11 @@ export default function ({ types: t }) {
         if (this.disableSetTrap[ this.disableSetTrap.length - 1 ]) return
 
         const memberExpr = path.node.left
+        const callee = memberExpr.computed ? memberExpr.property : t.stringLiteral(memberExpr.property.name)
         path.replaceWith(
           t.callExpression(t.identifier('globalSetInterceptor'), [
             memberExpr.object,
-            t.stringLiteral(memberExpr.property.name),
+            callee,
             path.node.right
           ])
         )

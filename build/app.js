@@ -20,7 +20,8 @@ exports.default = function (_ref) {
         if (this.disableSetTrap[this.disableSetTrap.length - 1]) return;
 
         var memberExpr = path.node.left;
-        path.replaceWith(t.callExpression(t.identifier('globalSetInterceptor'), [memberExpr.object, t.stringLiteral(memberExpr.property.name), path.node.right]));
+        var callee = memberExpr.computed ? memberExpr.property : t.stringLiteral(memberExpr.property.name);
+        path.replaceWith(t.callExpression(t.identifier('globalSetInterceptor'), [memberExpr.object, callee, path.node.right]));
       }
     },
 
